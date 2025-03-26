@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   deleteTaskAsync,
   updateTaskStatusAsync,
-  updateTaskAsync, // Ensure this is imported
+  updateTaskAsync,
 } from "../redux/slices/taskSlice";
 import { IoMdStar } from "react-icons/io";
 import { CiBellOn, CiStar, CiCalendarDate } from "react-icons/ci";
@@ -21,13 +21,11 @@ const RightSidebar = () => {
     state.tasks.tasks.find((task) => task._id === state.ui.selectedTask)
   );
 
-  // State for editable fields
   const [title, setTitle] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [description, setDescription] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Populate fields when a task is selected
   useEffect(() => {
     if (selectedTask) {
       setTitle(selectedTask.title);
@@ -40,7 +38,6 @@ const RightSidebar = () => {
 
   const ImportantIcon = selectedTask.important ? IoMdStar : CiStar;
 
-  // Function to handle task updates
   const handleUpdateTask = () => {
     dispatch(
       updateTaskAsync({
@@ -56,10 +53,8 @@ const RightSidebar = () => {
         isRightSidebarOpen ? "w-80 md:w-1/4" : "w-0"
       } overflow-hidden flex flex-col`}
     >
-      {/* Task Header */}
       <div className="border-b pb-3 flex justify-between items-center">
         <div className="flex items-center space-x-3">
-          {/* Editable Task Title */}
           <input
             type="text"
             className="text-lg bg-transparent focus:outline-none"
@@ -82,7 +77,6 @@ const RightSidebar = () => {
         />
       </div>
 
-      {/* Sidebar Actions */}
       <div className="mt-4 space-y-4 flex-grow">
         {[
           { icon: IoAdd, label: "Add Step" },
@@ -101,7 +95,6 @@ const RightSidebar = () => {
               <p>{label}</p>
             </div>
 
-            {/* Date Picker */}
             {label === "Add Due Date" && showDatePicker && (
               <input
                 type="date"
@@ -113,7 +106,6 @@ const RightSidebar = () => {
           </div>
         ))}
 
-        {/* Description (Using Add Notes Textarea) */}
         <textarea
           placeholder="Add Notes"
           className="outline-none px-2 border-b w-full"
@@ -122,7 +114,6 @@ const RightSidebar = () => {
         />
       </div>
 
-      {/* Bottom Actions */}
       <div className="border-t border-gray-300 py-3 flex justify-between items-center mt-auto">
         <RxCross1
           className="w-6 h-6 cursor-pointer text-gray-700 hover:text-gray-900"

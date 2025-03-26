@@ -25,11 +25,7 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-between py-4">
       <div className="flex items-center gap-4">
-        <button
-          className={buttonClass}
-          onClick={handleSidebarToggle}
-          aria-label="Toggle Sidebar"
-        >
+        <button className={buttonClass} onClick={handleSidebarToggle}>
           <FaBars />
         </button>
         <img src={logo} alt="Task Manager Logo" className="h-8 w-[90px]" />
@@ -39,14 +35,10 @@ const Navbar = () => {
         <button className={buttonClass} aria-label="Search">
           <CiSearch />
         </button>
-        <button
-          className={buttonClass}
-          onClick={handleGridToggle}
-          aria-label="Toggle Grid/List View"
-        >
+        <button className={buttonClass} onClick={handleGridToggle}>
           {gridView ? <IoListOutline /> : <CiGrid41 />}
         </button>
-        <button className={buttonClass} aria-label="Toggle Dark Mode">
+        <button className={buttonClass}>
           <RiMoonClearLine />
         </button>
       </div>

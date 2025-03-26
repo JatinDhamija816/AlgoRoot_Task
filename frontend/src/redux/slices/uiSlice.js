@@ -9,7 +9,7 @@ const loadState = (key, defaultValue) => {
       `Failed to load ${key} from localStorage. Resetting to default.`
     );
     console.error(error);
-    localStorage.removeItem(key); // Clear corrupted data
+    localStorage.removeItem(key);
     return defaultValue;
   }
 };
@@ -35,20 +35,23 @@ const uiSlice = createSlice({
   reducers: {
     toggleLeftSidebar: (state) => {
       state.isLeftSidebarOpen = !state.isLeftSidebarOpen;
+      persistUiState(state);
     },
     toggleRightSidebar: (state) => {
       state.isRightSidebarOpen = !state.isRightSidebarOpen;
+      persistUiState(state);
     },
     toggleGridView: (state) => {
       state.isGridView = !state.isGridView;
+      persistUiState(state);
     },
     setSelectedTask: (state, action) => {
       state.selectedTask = action.payload;
+      persistUiState(state);
     },
   },
 });
 
-// Redux middleware or React useEffect will handle localStorage updates
 export const persistUiState = (state) => {
   saveState("leftSidebar", state.isLeftSidebarOpen);
   saveState("rightSidebar", state.isRightSidebarOpen);

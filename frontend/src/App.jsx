@@ -5,7 +5,6 @@ import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import CompletedTask from "./components/CompletedTask";
 
-// Lazy-loaded components
 const LeftSidebar = lazy(() => import("./components/LeftSidebar"));
 const RightSidebar = lazy(() => import("./components/RightSidebar"));
 
@@ -20,7 +19,6 @@ const App = () => {
       <Navbar />
 
       <div className="flex relative">
-        {/* Single Suspense wrapper to avoid redundant fallbacks */}
         <Suspense
           fallback={<div className="text-center py-4">Loading sidebars...</div>}
         >

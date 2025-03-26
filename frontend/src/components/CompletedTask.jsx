@@ -36,7 +36,6 @@ const CompletedTask = () => {
               className="flex justify-between items-center p-3 gap-3 border-b-2 border-gray-300"
             >
               <div className="flex space-x-3 items-center">
-                {/* Task Completion Checkbox */}
                 <input
                   type="checkbox"
                   id={`task-${task._id}`}
@@ -52,7 +51,6 @@ const CompletedTask = () => {
                   }
                 />
                 <div>
-                  {/* Task Title */}
                   <label
                     htmlFor={`task-${task._id}`}
                     className="cursor-pointer"
@@ -67,15 +65,11 @@ const CompletedTask = () => {
                 </div>
               </div>
 
-              {/* Task Actions (Important & Delete) */}
               <div className="flex space-x-2 items-center">
                 <ImportantIcon
                   className={`w-6 h-6 cursor-pointer ${
                     task.important ? "text-yellow-500" : "text-gray-700"
                   }`}
-                  aria-label={
-                    task.important ? "Unmark as important" : "Mark as important"
-                  }
                   onClick={() =>
                     dispatch(
                       updateTaskStatusAsync({

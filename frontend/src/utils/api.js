@@ -30,7 +30,6 @@ const handleRequest = async (requestFunc) => {
   }
 };
 
-// API Calls
 export const createTask = (taskData) =>
   handleRequest(() => api.post("/tasks", taskData));
 

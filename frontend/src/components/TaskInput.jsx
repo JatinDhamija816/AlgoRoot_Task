@@ -7,11 +7,11 @@ import { createTaskAsync } from "../redux/slices/taskSlice";
 const TaskInput = () => {
   const dispatch = useDispatch();
   const [task, setTask] = useState({ title: "", dueDate: "" });
-  const [error, setError] = useState(""); // State for error message
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setTask({ ...task, [e.target.name]: e.target.value });
-    setError(""); // Clear error when user starts typing
+    setError("");
   };
 
   const handleSubmit = async (e) => {
@@ -41,8 +41,7 @@ const TaskInput = () => {
             onChange={handleChange}
             autoFocus
           />
-          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}{" "}
-          {/* Inline error message */}
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           <div className="flex justify-between items-center mt-2">
             <div className="flex space-x-2">
               <CiBellOn className="w-6 h-6 text-gray-700 cursor-pointer" />

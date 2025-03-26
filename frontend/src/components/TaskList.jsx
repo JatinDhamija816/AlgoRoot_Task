@@ -19,7 +19,7 @@ const TaskList = () => {
     if (tasks.length === 0) {
       dispatch(fetchTasksAsync());
     }
-  }, [dispatch, tasks.length]); // Fetch only if tasks are empty
+  }, [dispatch, tasks.length]);
 
   const pendingTasks = tasks.filter((task) => !task.completed);
 
@@ -48,7 +48,6 @@ const TaskList = () => {
                 }`}
               >
                 <div className="flex space-x-3 items-center">
-                  {/* Task Completion Checkbox */}
                   <input
                     type="checkbox"
                     id={`task-${task._id}`}
@@ -65,7 +64,6 @@ const TaskList = () => {
                   />
 
                   <div>
-                    {/* Task Title (Opens Right Sidebar) */}
                     <label
                       htmlFor={`task-${task._id}`}
                       className="cursor-pointer font-medium"
@@ -85,7 +83,6 @@ const TaskList = () => {
                   </div>
                 </div>
 
-                {/* Task Actions (Important & Delete) */}
                 <div className="flex space-x-2 items-center">
                   <ImportantIcon
                     className={`w-6 h-6 cursor-pointer ${

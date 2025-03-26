@@ -20,7 +20,6 @@ const SidebarItem = ({ icon: Icon, label, onClick }) => (
 const LeftSidebar = () => {
   const isLeftSidebarOpen = useSelector((state) => state.ui.isLeftSidebarOpen);
 
-  // Memoized sidebar items to prevent unnecessary re-renders
   const sidebarItems = useMemo(
     () => [
       { icon: LuClipboardList, label: "All Tasks" },
@@ -38,7 +37,6 @@ const LeftSidebar = () => {
         isLeftSidebarOpen ? "w-1/5" : "w-[80px]"
       }`}
     >
-      {/* Profile Section */}
       <div className="flex flex-col items-center relative">
         <img
           src={user}
@@ -48,20 +46,17 @@ const LeftSidebar = () => {
         <p className="mt-16 text-lg font-semibold text-gray-900">Hey, ABCD</p>
       </div>
 
-      {/* Sidebar Items */}
       <div className="bg-white rounded-md mx-3 my-4 p-2 shadow-sm">
         {sidebarItems.map((item, index) => (
           <SidebarItem key={index} icon={item.icon} label={item.label} />
         ))}
       </div>
 
-      {/* Add List Button */}
       <div className="bg-white mx-3 my-3 p-4 flex items-center gap-2 rounded-md shadow-sm cursor-pointer hover:bg-gray-200 transition-all">
         <IoAdd className="w-6 h-6 text-gray-700" />
         <p className="text-[15px] text-gray-900">Add list</p>
       </div>
 
-      {/* Today Tasks */}
       <div className="bg-white mx-3 my-3 p-4 rounded-md shadow-sm">
         <div className="flex items-center justify-between mb-2">
           <p className="text-[15px] font-medium text-gray-900">Today Tasks</p>
