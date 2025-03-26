@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import user from "../assets/user.png";
 import { LuClipboardList } from "react-icons/lu";
 import { CiCalendar, CiStar, CiMap } from "react-icons/ci";
@@ -20,34 +20,29 @@ const SidebarItem = ({ icon: Icon, label, onClick }) => (
 const LeftSidebar = () => {
   const isLeftSidebarOpen = useSelector((state) => state.ui.isLeftSidebarOpen);
 
-  const sidebarItems = useMemo(
-    () => [
-      { icon: LuClipboardList, label: "All Tasks" },
-      { icon: CiCalendar, label: "Today" },
-      { icon: CiStar, label: "Important" },
-      { icon: CiMap, label: "Planned" },
-      { icon: FaChalkboardTeacher, label: "Assigned to me" },
-    ],
-    []
-  );
-
   return (
     <aside
-      className={`bg-[#EEF6EF] pt-14 pb-5 flex-shrink-0 transition-all duration-300 ${
-        isLeftSidebarOpen ? "w-1/5" : "w-[80px]"
-      }`}
+      className={`bg-[#EEF6EF] shadow-lg rounded-lg p-5 absolute left-0 top-0 h-full transition-all duration-300 ease-in-out min-h-screen ${
+        isLeftSidebarOpen ? "w-80 md:w-1/4" : "w-0"
+      } overflow-hidden flex flex-col`}
     >
-      <div className="flex flex-col items-center relative">
+      <div className="flex flex-col items-center relative mt-4">
         <img
           src={user}
           alt="User"
-          className="w-20 h-20 rounded-full border-4 border-white shadow-md absolute top-[-40px]"
+          className="w-20 h-20 rounded-full border-4 border-white shadow-md"
         />
-        <p className="mt-16 text-lg font-semibold text-gray-900">Hey, ABCD</p>
+        <p className="mt-4 text-lg font-semibold text-gray-900">Hey, ABCD</p>
       </div>
 
       <div className="bg-white rounded-md mx-3 my-4 p-2 shadow-sm">
-        {sidebarItems.map((item, index) => (
+        {[
+          { icon: LuClipboardList, label: "All Tasks" },
+          { icon: CiCalendar, label: "Today" },
+          { icon: CiStar, label: "Important" },
+          { icon: CiMap, label: "Planned" },
+          { icon: FaChalkboardTeacher, label: "Assigned to me" },
+        ].map((item, index) => (
           <SidebarItem key={index} icon={item.icon} label={item.label} />
         ))}
       </div>
