@@ -17,22 +17,19 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
-      console.warn(`❌ CORS blocked request from: ${origin}`);
+      console.warn(`CORS blocked request from: ${origin}`);
       return callback(new Error('CORS Policy Violation'), false);
     },
     credentials: true,
   })
 );
 
-// Security: Cookie settings
 app.use(cookieParser());
 app.use(express.json({ limit: '16kb' }));
 app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 
-// Routes
 app.use('/api/v1', taskRoutes);
 
-// Handle undefined routes (404)
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
@@ -40,7 +37,6 @@ app.use('*', (req, res) => {
   });
 });
 
-// Centralized error handling
 app.use(errorHandler);
 
 export default app;

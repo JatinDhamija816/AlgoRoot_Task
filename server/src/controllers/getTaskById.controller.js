@@ -6,13 +6,11 @@ import ApiResponse from '../utils/ApiResponse.js';
 const getTaskById = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  // Validate MongoDB ObjectId
   if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
     return next(new ApiError(400, 'Invalid task ID format'));
   }
 
-  // Fetch task & exclude Mongoose metadata fields if unnecessary
-  const task = await Task.findById(id).select('-__v');
+  const task = await Task.findById(id);
 
   if (!task) {
     return next(new ApiError(404, 'Task not found'));

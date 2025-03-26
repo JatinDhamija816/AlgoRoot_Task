@@ -1,13 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 
-/**
- * Wraps an asynchronous Express route handler to automatically catch errors and pass them to the next middleware.
- * @param {Function} fn - The asynchronous route handler function.
- * @returns {Function} - A wrapped route handler that catches errors and passes them to the next middleware.
- */
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch((error) => {
-    const errorId = uuidv4(); // Unique ID for better tracking
+    const errorId = uuidv4();
 
     if (process.env.NODE_ENV === 'development') {
       const logError = {
@@ -29,24 +24,19 @@ const asyncHandler = (fn) => (req, res, next) => {
       );
     }
 
-    error.errorId = errorId; // Attach ID to error for API responses
+    error.errorId = errorId;
     next(error);
   });
 };
 
-/**
- * Safely formats the request body for logging.
- * @param {any} body - The request body.
- * @returns {object | undefined}
- */
 const getSafeBody = (body) => {
   if (!body || Object.keys(body).length === 0) return undefined;
   try {
     return {
-      body: JSON.stringify(body, null, 2).slice(0, 500) + '...', // Truncate long bodies
+      body: JSON.stringify(body, null, 2).slice(0, 500) + '...',
     };
   } catch (err) {
-    return { body: '[Unstringifiable body]' }; // Handle circular structures or buffers
+    return { body: '[Unstringifiable body]' };
   }
 };
 

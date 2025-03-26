@@ -17,9 +17,9 @@ const taskSchema = new Schema(
       type: Date,
       validate: {
         validator: function (value) {
-          if (!value) return true; // Allows null values
+          if (!value) return true;
           const today = new Date();
-          today.setHours(0, 0, 0, 0); // Normalize to midnight
+          today.setHours(0, 0, 0, 0);
           return value >= today;
         },
         message: 'Due date cannot be in the past',
@@ -28,12 +28,10 @@ const taskSchema = new Schema(
     completed: {
       type: Boolean,
       default: false,
-      index: true, // Index for faster queries
     },
     important: {
       type: Boolean,
       default: false,
-      index: true, // Index for faster queries
     },
   },
   {

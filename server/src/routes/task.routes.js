@@ -8,20 +8,10 @@ import deleteTask from '../controllers/deleteTask.controller.js';
 
 const router = express.Router();
 
-// Tasks collection
-router
-  .route('/tasks')
-  .post(createTask) // Create a new task
-  .get(getAllTasks); // Retrieve all tasks
+router.route('/tasks').post(createTask).get(getAllTasks);
 
-// Single task operations
-router
-  .route('/tasks/:id')
-  .get(getTaskById) // Retrieve a task by ID
-  .put(updateTask) // Update task details
-  .delete(deleteTask); // Delete a task
+router.route('/tasks/:id').get(getTaskById).put(updateTask).delete(deleteTask);
 
-// Toggle completed/important status
 router.patch('/tasks/:id/status', updateTaskStatus);
 
 export default router;

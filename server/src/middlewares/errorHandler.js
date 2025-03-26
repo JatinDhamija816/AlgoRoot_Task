@@ -1,18 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 import ApiError from '../utils/ApiError.js';
 
-/**
- * Centralized Express error handler middleware.
- *
- * @param {Error} err - The error object thrown in the application.
- * @param {import("express").Request} req - Express request object.
- * @param {import("express").Response} res - Express response object.
- * @param {import("express").NextFunction} next - Express next function.
- */
 const errorHandler = (err, req, res, next) => {
-  if (res.headersSent) return next(err); // Prevent multiple responses
+  if (res.headersSent) return next(err);
 
-  const errorId = err.errorId || uuidv4(); // Ensure every error has a unique ID
+  const errorId = err.errorId || uuidv4();
   const statusCode = err instanceof ApiError ? err.statusCode : 500;
   const message =
     err instanceof ApiError ? err.message : 'Internal Server Error';
@@ -21,7 +13,6 @@ const errorHandler = (err, req, res, next) => {
   const data = err instanceof ApiError ? (err.data ?? null) : null;
   const timestamp = err.timestamp || new Date().toISOString();
 
-  // Enhanced logging in development mode
   if (process.env.NODE_ENV === 'development') {
     console.error('🚨 [ErrorHandler]:', {
       errorId,
@@ -44,23 +35,18 @@ const errorHandler = (err, req, res, next) => {
     data,
     errorId,
     timestamp,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }), // Include stack trace in dev mode
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 };
 
-/**
- * Safely formats the request body for logging.
- * @param {any} body - The request body.
- * @returns {object | undefined}
- */
 const getSafeBody = (body) => {
   if (!body || Object.keys(body).length === 0) return undefined;
   try {
     return {
-      body: JSON.stringify(body, null, 2).slice(0, 500) + '...', // Truncate long bodies
+      body: JSON.stringify(body, null, 2).slice(0, 500) + '...',
     };
   } catch (err) {
-    return { body: '[Unstringifiable body]' }; // Handle circular structures or buffers
+    return { body: '[Unstringifiable body]' };
   }
 };
 

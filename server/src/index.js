@@ -8,27 +8,26 @@ const port = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    console.log('🚀 Connecting to MongoDB...');
+    console.log('Connecting to MongoDB...');
     await connectDB();
-    console.log('✅ MongoDB connection successful.');
+    console.log('MongoDB connection successful.');
 
     app.listen(port, () => {
-      console.log(`🌍 Server is running on port: ${port}`);
+      console.log(`Server is running on port: ${port}`);
     });
   } catch (error) {
-    console.error('❌ Error starting the server:', error.message);
+    console.error('Error starting the server:', error.message);
     process.exit(1);
   }
 };
 
-// Global error handlers for unexpected errors
 process.on('uncaughtException', (error) => {
-  console.error('❗ Uncaught Exception:', error);
+  console.error('Uncaught Exception:', error);
   process.exit(1);
 });
 
 process.on('unhandledRejection', (reason) => {
-  console.error('⚠️ Unhandled Rejection:', reason);
+  console.error('Unhandled Rejection:', reason);
   process.exit(1);
 });
 

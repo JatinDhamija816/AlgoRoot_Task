@@ -6,13 +6,11 @@ import ApiResponse from '../utils/ApiResponse.js';
 const deleteTask = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  // Validate MongoDB ObjectId
   if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
     return next(new ApiError(400, 'Invalid task ID format.'));
   }
 
-  // Find and delete the task
-  const task = await Task.findByIdAndDelete(id, { projection: { __v: 0 } });
+  const task = await Task.findByIdAndDelete(id);
 
   if (!task) {
     return next(new ApiError(404, 'Task not found.'));

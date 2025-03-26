@@ -7,12 +7,10 @@ const updateTaskStatus = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { field } = req.body;
 
-  // Validate ID format
   if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
     return next(new ApiError(400, 'Invalid task ID format.'));
   }
 
-  // Validate the field
   if (!['completed', 'important'].includes(field)) {
     return next(
       new ApiError(400, "Invalid field. Use 'completed' or 'important'.")
@@ -26,8 +24,8 @@ const updateTaskStatus = asyncHandler(async (req, res, next) => {
 
   const updatedTask = await Task.findByIdAndUpdate(
     id,
-    { $set: { [field]: !task[field] } }, // Toggle boolean value using $set
-    { new: true } // Return the updated document
+    { $set: { [field]: !task[field] } },
+    { new: true }
   );
 
   if (!updatedTask) {
