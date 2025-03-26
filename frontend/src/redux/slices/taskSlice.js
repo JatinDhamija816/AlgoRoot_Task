@@ -21,7 +21,9 @@ export const fetchTasksAsync = createAsyncThunk(
     try {
       return await fetchTasks();
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch tasks"
+      );
     }
   }
 );
@@ -32,7 +34,9 @@ export const fetchTaskByIdAsync = createAsyncThunk(
     try {
       return await getTaskById(taskId);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch task"
+      );
     }
   }
 );
@@ -43,7 +47,9 @@ export const createTaskAsync = createAsyncThunk(
     try {
       return await createTask(taskData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to create task"
+      );
     }
   }
 );
@@ -54,30 +60,22 @@ export const updateTaskAsync = createAsyncThunk(
     try {
       return await updateTask(taskId, updatedData);
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update task"
+      );
     }
   }
 );
 
-export const toggleCompleteAsync = createAsyncThunk(
-  "tasks/toggleComplete",
-  async ({ taskId, completed }, { rejectWithValue }) => {
+export const updateTaskStatusAsync = createAsyncThunk(
+  "tasks/updateTaskStatus",
+  async ({ taskId, field }, { rejectWithValue }) => {
     try {
-      return await updateTaskStatus(taskId, { completed });
+      return await updateTaskStatus(taskId, field);
     } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const toggleImportantAsync = createAsyncThunk(
-  "tasks/toggleImportant",
-  async (taskId, { rejectWithValue, getState }) => {
-    try {
-      const task = getState().tasks.tasks.find((t) => t._id === taskId);
-      return await updateTaskStatus(taskId, { important: !task.important });
-    } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update task status"
+      );
     }
   }
 );
@@ -89,7 +87,9 @@ export const deleteTaskAsync = createAsyncThunk(
       await deleteTaskApi(taskId);
       return taskId;
     } catch (error) {
-      return rejectWithValue(error.message);
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete task"
+      );
     }
   }
 );
@@ -100,7 +100,6 @@ const taskSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch tasks
       .addCase(fetchTasksAsync.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -114,86 +113,37 @@ const taskSlice = createSlice({
         state.error = action.payload;
       })
 
-      // Fetch task by ID
-      .addCase(fetchTaskByIdAsync.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(fetchTaskByIdAsync.fulfilled, (state, action) => {
-        state.loading = false;
         state.selectedTask = action.payload;
       })
-      .addCase(fetchTaskByIdAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
 
-      // Create task
-      .addCase(createTaskAsync.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(createTaskAsync.fulfilled, (state, action) => {
-        state.loading = false;
         state.tasks.push(action.payload);
       })
-      .addCase(createTaskAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+
+      .addCase(updateTaskAsync.fulfilled, (state, action) => {
+        const index = state.tasks.findIndex(
+          (t) => t._id === action.payload._id
+        );
+        if (index !== -1) state.tasks[index] = action.payload;
       })
 
-      // Update task
-      .addCase(updateTaskAsync.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(updateTaskAsync.fulfilled, (state, action) => {
-        state.loading = false;
+      .addCase(updateTaskStatusAsync.fulfilled, (state, action) => {
         const task = state.tasks.find((t) => t._id === action.payload._id);
         if (task) Object.assign(task, action.payload);
       })
-      .addCase(updateTaskAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
 
-      // Toggle completion
-      .addCase(toggleCompleteAsync.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(toggleCompleteAsync.fulfilled, (state, action) => {
-        state.loading = false;
-        const task = state.tasks.find((t) => t._id === action.payload._id);
-        if (task) task.completed = action.payload.completed;
-      })
-      .addCase(toggleCompleteAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      // Toggle important
-      .addCase(toggleImportantAsync.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(toggleImportantAsync.fulfilled, (state, action) => {
-        state.loading = false;
-        const task = state.tasks.find((t) => t._id === action.payload._id);
-        if (task) task.important = action.payload.important;
-      })
-      .addCase(toggleImportantAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      // Delete task
-      .addCase(deleteTaskAsync.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(deleteTaskAsync.fulfilled, (state, action) => {
-        state.loading = false;
         state.tasks = state.tasks.filter((task) => task._id !== action.payload);
       })
-      .addCase(deleteTaskAsync.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+
+      .addMatcher(
+        (action) => action.type.endsWith("/rejected"),
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+        }
+      );
   },
 });
 

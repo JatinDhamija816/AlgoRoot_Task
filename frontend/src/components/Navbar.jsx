@@ -3,57 +3,51 @@ import { FaBars } from "react-icons/fa";
 import { CiSearch, CiGrid41 } from "react-icons/ci";
 import { RiMoonClearLine } from "react-icons/ri";
 import { IoListOutline } from "react-icons/io5";
-import logo from "../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
-import { createSelector } from "reselect";
 import { toggleGridView, toggleLeftSidebar } from "../redux/slices/uiSlice";
-
-const selectUIState = createSelector(
-  (state) => state.ui,
-  (ui) => ui.isGridView
-);
+import logo from "../assets/logo.png";
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const gridView = useSelector(selectUIState);
+  const gridView = useSelector((state) => state.ui.isGridView);
 
-  const handleSidebarToggle = useCallback(
-    () => dispatch(toggleLeftSidebar()),
-    [dispatch]
-  );
-  const handleGridToggle = useCallback(
-    () => dispatch(toggleGridView()),
-    [dispatch]
-  );
+  const handleSidebarToggle = useCallback(() => {
+    dispatch(toggleLeftSidebar());
+  }, [dispatch]);
+
+  const handleGridToggle = useCallback(() => {
+    dispatch(toggleGridView());
+  }, [dispatch]);
+
+  const buttonClass =
+    "w-6 h-6 flex items-center justify-center cursor-pointer text-xl";
 
   return (
     <nav className="flex items-center justify-between py-4">
       <div className="flex items-center gap-4">
         <button
-          className="w-6 h-6 flex items-center justify-center cursor-pointer"
+          className={buttonClass}
           onClick={handleSidebarToggle}
+          aria-label="Toggle Sidebar"
         >
-          <FaBars className="text-xl" />
+          <FaBars />
         </button>
-        <img src={logo} alt="logo" className="h-8 w-[90px]" />
+        <img src={logo} alt="Task Manager Logo" className="h-8 w-[90px]" />
       </div>
 
       <div className="flex gap-4">
-        <button className="w-6 h-6 flex items-center justify-center cursor-pointer">
-          <CiSearch className="text-xl" />
+        <button className={buttonClass} aria-label="Search">
+          <CiSearch />
         </button>
         <button
-          className="w-6 h-6 flex items-center justify-center cursor-pointer"
+          className={buttonClass}
           onClick={handleGridToggle}
+          aria-label="Toggle Grid/List View"
         >
-          {gridView ? (
-            <IoListOutline className="text-xl" />
-          ) : (
-            <CiGrid41 className="text-xl" />
-          )}
+          {gridView ? <IoListOutline /> : <CiGrid41 />}
         </button>
-        <button className="w-6 h-6 flex items-center justify-center cursor-pointer">
-          <RiMoonClearLine className="text-xl" />
+        <button className={buttonClass} aria-label="Toggle Dark Mode">
+          <RiMoonClearLine />
         </button>
       </div>
     </nav>

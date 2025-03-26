@@ -1,40 +1,35 @@
 import React, { Suspense, lazy } from "react";
 import { useSelector } from "react-redux";
-import { createSelector } from "reselect";
 import Navbar from "./components/Navbar";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import CompletedTask from "./components/CompletedTask";
 
+// Lazy-loaded components
 const LeftSidebar = lazy(() => import("./components/LeftSidebar"));
 const RightSidebar = lazy(() => import("./components/RightSidebar"));
 
-const selectUIState = createSelector(
-  (state) => state.ui,
-  (ui) => ({
-    isLeftSidebarOpen: ui.isLeftSidebarOpen,
-    isRightSidebarOpen: ui.isRightSidebarOpen,
-  })
-);
-
 const App = () => {
-  const { isLeftSidebarOpen, isRightSidebarOpen } = useSelector(selectUIState);
+  const isLeftSidebarOpen = useSelector((state) => state.ui.isLeftSidebarOpen);
+  const isRightSidebarOpen = useSelector(
+    (state) => state.ui.isRightSidebarOpen
+  );
 
   return (
     <div className="md:mx-10 mx-2">
       <Navbar />
+
       <div className="flex relative">
-        <Suspense fallback={<div>Loading...</div>}>
+        {/* Single Suspense wrapper to avoid redundant fallbacks */}
+        <Suspense
+          fallback={<div className="text-center py-4">Loading sidebars...</div>}
+        >
           {isLeftSidebarOpen && <LeftSidebar />}
-        </Suspense>
-
-        <div className="flex-1">
-          <TaskInput />
-          <TaskList />
-          <CompletedTask />
-        </div>
-
-        <Suspense fallback={<div>Loading...</div>}>
+          <main className="flex-1 p-4">
+            <TaskInput />
+            <TaskList />
+            <CompletedTask />
+          </main>
           {isRightSidebarOpen && <RightSidebar />}
         </Suspense>
       </div>
